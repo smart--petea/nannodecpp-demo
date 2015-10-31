@@ -35,6 +35,20 @@ location unpack_location(Nan::NAN_METHOD_ARGS_TYPE info)
     return loc;
 }
 
+NAN_METHOD(RainfallData) {
+    location loc = unpack_location(info);
+    rain_result result = calc_rain_stats(loc);
+
+    v8::Local<v8::Object> obj = Nan::New<v8::Object>();
+
+    Nan::Set(obj, Nan::New("mean").ToLocalChecked(), Nan::New<v8::Number>(result.mean));
+    Nan::Set(obj, Nan::New("median").ToLocalChecked(), Nan::New<v8::Number>(result.median));
+    Nan::Set(obj, Nan::New("standard_deviation").ToLocalChecked(), Nan::New(result.standard_deviation));
+    Nan::Set(obj, Nan::New("n").ToLocalChecked(), Nan::New<v8::Integer>(result.n));
+
+    info.GetReturnValue().Set(obj);
+}
+
 NAN_METHOD(AvgRainfall) {
     location loc = unpack_location(info);
     double avg = avg_rainfall(loc);
@@ -44,6 +58,7 @@ NAN_METHOD(AvgRainfall) {
 
 NAN_MODULE_INIT(init) {
     Nan::Set(target, Nan::New("avg_rainfall").ToLocalChecked(), Nan::New<v8::FunctionTemplate>(AvgRainfall)->GetFunction());
+    Nan::Set(target, Nan::New("data_rainfall").ToLocalChecked(), Nan::New<v8::FunctionTemplate>(RainfallData)->GetFunction());
 }
 
 

@@ -1,8 +1,44 @@
 #include <nan.h>
-//#include "rainfall.h"
-//
+#include "rainfall.h"
+
+sample unpack_sample(v8::Handle<v8::Object> sample_obj) {
+    sample s;
+    v8::Handle<v8::Value> date_Value = sample_obj->Get(Nan::New("date").ToLocalChecked());
+    v8::Handle<v8::Value> rainfall_Value = sample_obj->Get(Nan::New("rainfall").ToLocalChecked());
+
+    v8::String::Utf8Value utfValue(date_Value);
+    s.date = std::string(*utfValue);
+    s.rainfall = rainfall_Value->NumberValue();
+
+    return s;
+}
+
+location unpack_location(Nan::NAN_METHOD_ARGS_TYPE info)
+{
+    location loc;
+    v8::Handle<v8::Object> location_obj = v8::Handle<v8::Object>::Cast(info[0]);
+    v8::Handle<v8::Value> lat_Value = location_obj->Get(Nan::New("latitutude").ToLocalChecked()); 
+    v8::Handle<v8::Value> lon_Value = location_obj->Get(Nan::New("longitude").ToLocalChecked());
+
+    loc.latitude = lat_Value->NumberValue();
+    loc.longitude = lon_Value->NumberValue();
+
+    v8::Handle<v8::Array> array = v8::Handle<v8::Array>::Cast(location_obj->Get(Nan::New("samples").ToLocalChecked()));
+
+    int sample_count = array->Length();
+
+    for(int i = 0; i < sample_count; i++) {
+        sample s = unpack_sample(v8::Handle<v8::Object>::Cast(array->Get(Nan::New(i))));
+        loc.samples.push_back(s);
+    }
+
+    return loc;
+}
+
 NAN_METHOD(AvgRainfall) {
-    info.GetReturnValue().Set(Nan::New(0));
+    location loc = unpack_location(info);
+    double avg = avg_rainfall(loc);
+    info.GetReturnValue().Set(Nan::New(avg));
 }
 
 

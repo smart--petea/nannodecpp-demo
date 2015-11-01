@@ -33,5 +33,5 @@ var data = rainfall.data_rainfall(location);
 
 console.log("Mean = " + data.mean);
 console.log("Median = " + data.median);
-console.log("Standard Deviation = " + data.standardd_deviation);
+console.log("Standard Deviation = " + data.standard_deviation);
 console.log("N = " + data.n);

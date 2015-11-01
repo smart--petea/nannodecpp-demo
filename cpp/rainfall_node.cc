@@ -42,8 +42,8 @@ NAN_METHOD(RainfallData) {
     v8::Local<v8::Object> obj = Nan::New<v8::Object>();
 
     Nan::Set(obj, Nan::New("mean").ToLocalChecked(), Nan::New<v8::Number>(result.mean));
-    Nan::Set(obj, Nan::New("median").ToLocalChecked(), Nan::New<v8::Number>(result.median));
     Nan::Set(obj, Nan::New("standard_deviation").ToLocalChecked(), Nan::New(result.standard_deviation));
+    Nan::Set(obj, Nan::New("median").ToLocalChecked(), Nan::New<v8::Number>(result.median));
     Nan::Set(obj, Nan::New("n").ToLocalChecked(), Nan::New<v8::Integer>(result.n));
 
     info.GetReturnValue().Set(obj);

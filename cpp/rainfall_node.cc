@@ -89,7 +89,7 @@ NAN_METHOD(CalculateResults) {
             calc_rain_stats
     );
 
-    //we'll populate this with the results
+    ////we'll populate this with the results
     v8::Local<v8::Array> result_list = Nan::New<v8::Array>();
 
     for(unsigned int i = 0; i < results.size(); i++)
